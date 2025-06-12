@@ -1,0 +1,133 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+const int MAX = 100;
+
+struct Karyawan {
+    int id;
+    string nama;
+    string jabatan;
+    string notelp;
+};
+
+void inputData(Karyawan karyawan[], int &n) {
+    int tambahan;
+    cout << "\nBerapa data yang ingin kamu tambahkan? ";
+    cin >> tambahan;
+
+    if (n + tambahan > MAX) {
+        cout << "Maaf, kapasitas maksimal " << MAX << " data. Gagal menambahkan.\n";
+        return;
+    }
+
+    for (int i = n; i < n + tambahan; i++) {
+        cout << "\nData ke-" << i + 1 << ":\n";
+        cout << "ID       : "; cin >> karyawan[i].id;
+        cin.ignore();
+        cout << "Nama     : "; getline(cin, karyawan[i].nama);
+        cout << "Jabatan  : "; getline(cin, karyawan[i].jabatan);
+        cout << "No. Telp : "; getline(cin, karyawan[i].notelp);
+    }
+    n += tambahan;
+}
+
+void tampilData(Karyawan karyawan[], int n) {
+    if (n == 0) {
+        cout << "Belum ada data yang dimasukkan.\n";
+        return;
+    }
+    cout << "\n=== Daftar Karyawan ===\n";
+    for (int i = 0; i < n; i++) {
+        cout << "\nData ke-" << i + 1 << ":\n";
+        cout << "ID       : " << karyawan[i].id << endl;
+        cout << "Nama     : " << karyawan[i].nama << endl;
+        cout << "Jabatan  : " << karyawan[i].jabatan << endl;
+        cout << "No. Telp : " << karyawan[i].notelp << endl;
+    }
+}
+
+void bubbleSort(Karyawan karyawan[], int n, bool ascending) {
+    for (int i = 0; i < n-1; i++) {
+        for (int j = 0; j < n-i-1; j++) {
+            bool kondisi = ascending ? (karyawan[j].id > karyawan[j+1].id)
+                                     : (karyawan[j].id < karyawan[j+1].id);
+            if (kondisi) {
+                swap(karyawan[j], karyawan[j+1]);
+            }
+        }
+    }
+}
+
+void cariKaryawan(Karyawan karyawan[], int n, int idDicari) {
+    bool ketemu = false;
+    for (int i = 0; i < n; i++) {
+        if (karyawan[i].id == idDicari) {
+            cout << "\nData ditemukan:\n";
+            cout << "ID       : " << karyawan[i].id << endl;
+            cout << "Nama     : " << karyawan[i].nama << endl;
+            cout << "Jabatan  : " << karyawan[i].jabatan << endl;
+            cout << "No. Telp : " << karyawan[i].notelp << endl;
+            ketemu = true;
+            break;
+        }
+    }
+    if (!ketemu) {
+        cout << "Data dengan ID " << idDicari << " tidak ditemukan.\n";
+    }
+}
+
+int main() {
+    Karyawan karyawan[MAX];
+    int n = 0, pilihan;
+    char ulang;
+
+    do {
+        cout << "\n=== MENU ===\n";
+        cout << "1. Input Data\n";
+        cout << "2. Lihat Data\n";
+        cout << "3. Urutkan ID Ascending\n";
+        cout << "4. Urutkan ID Descending\n";
+        cout << "5. Cari Data berdasarkan ID\n";
+        cout << "6. Keluar\n";
+        cout << "Pilih menu: ";
+        cin >> pilihan;
+
+        switch (pilihan) {
+            case 1:
+                inputData(karyawan, n);
+                break;
+            case 2:
+                tampilData(karyawan, n);
+                break;
+            case 3:
+                bubbleSort(karyawan, n, true);
+                cout << "\nData setelah diurutkan secara Ascending:\n";
+                tampilData(karyawan, n);
+                break;
+            case 4:
+                bubbleSort(karyawan, n, false);
+                cout << "\nData setelah diurutkan secara Descending:\n";
+                tampilData(karyawan, n);
+                break;
+            case 5: {
+                int cari;
+                cout << "Masukkan ID yang ingin dicari: ";
+                cin >> cari;
+                cariKaryawan(karyawan, n, cari);
+                break;
+            }
+            case 6:
+                cout << "Terima kasih!\n";
+                return 0;
+            default:
+                cout << "Pilihan tidak valid.\n";
+        }
+
+        cout << "\nKembali ke menu? (y/n): ";
+        cin >> ulang;
+
+    } while (ulang == 'y' || ulang == 'Y');
+
+    return 0;
+}
